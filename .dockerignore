@@ -1,0 +1,42 @@
+# Dependencies (already copied from deps stage)
+node_modules/
+
+# Build outputs
+.next/
+out/
+
+# Git
+.git/
+.gitignore
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Documentation
+README.md
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+/tmp/docker-build*.log
