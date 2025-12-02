@@ -10,124 +10,9 @@ import * as Fathom from "fathom-client";
 
 const navigation = [
   {
-    title: 'Overview',
-    links: [
-      { title: 'Quick start', href: '/docs/overview/quick-start' },
-      { title: 'Concepts', href: '/docs/concepts' },
-    ],
-  },
-  {
-    title: 'Frontend Tutorials',
-    links: [
-      { title: 'Next.js Deployment', href: '/docs/frontend/next-js-deployment-tutorial' },
-      { title: 'React Deployment', href: '/docs/frontend/react-deployment-tutorial' },
-      { title: 'Remix Deployment', href: '/docs/frontend/remix-deployment-tutorial' },
-      { title: 'Vue.js Deployment', href: '/docs/frontend/vue-deployment-tutorial' },
-      { title: 'Svelte Deployment', href: '/docs/frontend/svelte-deployment-tutorial' },
-      { title: 'Static Site Deployment', href: '/docs/frontend/static-site-deployment-tutorial' },
-    ],
-  },
-  {
-    title: 'Backend Tutorials',
-    links: [
-      { title: 'Laravel Deployment', href: '/docs/backend/laravel-deployment-tutorial' },
-      { title: 'Django Deployment', href: '/docs/backend/django-deployment-tutorial' },
-    ],
-  },
-  {
-    title: 'AI Deployment Tutorials',
-    links: [
-      { title: 'Flowise Deployment', href: '/docs/ai-deployments/flowise-deployment-tutorial' },
-      { title: 'Dockerfile Deployments', href: '/docs/ai-deployments/dockerfile-deployment-tutorial' },
-      { title: 'Streamlit Deployment', href: '/docs/ai-deployments/streamlit-deployment-tutorial' },
-      { title: 'Jupyter Notebook Deployments', href: '/docs/ai-deployments/jupyter-notebook-deployment-tutorial' },
-      { title: 'vLLM Deployment', href: '/docs/ai-deployments/vllm-deployment-tutorial' },
-      { title: 'Hugging Face Model Deployments', href: '/docs/ai-deployments/hugging-face-model-deployment-tutorial' },
-    ],
-  },
-  {
-    title: 'Deployments',
-    links: [
-      { title: 'Preview Deployments', href: '/docs/deployments/preview-deployments' },
-      { title: 'Rollbacks', href: '/docs/deployments/rollbacks' },
-      { title: 'Automated Deployments', href: '/docs/deployments/automated-deployments' },
-    ],
-  },
-  {
-    title: 'Deployment settings',
-    links: [
-      { title: 'Introduction', href: '/docs/deployment-settings/deployment-configuration' },
-      { title: 'Container Build Settings', href: '/docs/deployment-settings/image-settings' },
-      { title: 'Container Registries', href: '/docs/deployment-settings/registries' },
-      { title: 'Social Authentication', href: '/docs/deployment-settings/social-authentication' },
-      { title: 'DNS', href: '/docs/deployment-settings/dns' },
-      { title: 'Port Forwarding', href: '/docs/deployment-settings/port-forwarding' },
-      { title: 'HTTPS', href: '/docs/deployment-settings/https' },
-      { title: 'Secrets', href: '/docs/deployment-settings/secrets' },
-      { title: 'Volumes', href: '/docs/deployment-settings/volumes' },
-      { title: 'Resource Usage', href: '/docs/deployment-settings/resource-usage' },
-      { title: 'Chat Notifications', href: '/docs/deployment-settings/chat-notifications' },
-      { title: 'Creating a Custom Template', href: '/docs/deployment-settings/custom-template' },
-    ],
-  },
-  {
-    title: 'Environment settings',
-    links: [
-      { title: 'Introduction', href: '/docs/environment-settings/introduction' },
-      { title: 'Component updates', href: '/docs/environment-settings/component-updates' },
-    ],
-  },
-  {
-    title: 'Databases',
-    links: [
-      { title: 'Redis and PostgreSQL', href: '/blog/the-redis-and-postgres-megapost' },
-    ],
-  },
-  {
-    title: 'Monitoring',
-    links: [
-      { title: 'Loki', href: '/docs/monitoring/loki' },
-      { title: 'Grafana', href: '/docs/monitoring/grafana' },
-      { title: 'Prometheus', href: '/docs/monitoring/prometheus' },
-      { title: 'Integated Kubernetes Alerts', href: '/docs/monitoring/integrated-kubernetes-alerts' },
-    ],
-  },
-  {
-    title: 'CLI',
-    links: [
-      { title: 'Installation and Authentication', href: '/docs/cli' },
-      { title: 'Use-cases', href: '/docs/cli/cli-use-cases' },
-    ],
-  },
-  {
-    title: 'Kubernetes Resources',
-    links: [
-      { title: 'Kubernetes Essentials', href: '/docs/kubernetes-resources/kubernetes-essentials' },
-      { title: 'Troubleshooting', href: '/docs/kubernetes-resources/troubleshooting' },
-    ],
-  },
-  {
-    title: 'Self-Host',
-    links: [
-      { title: 'Quickstart', href: '/docs/self-host/quickstart' },
-      { title: 'Production Setup', href: '/docs/self-host/production-setup' },
-    ],
-  },
-  {
     title: 'Reference',
     links: [
-      { title: 'Gimlet Manifest Reference', href: '/docs/reference/gimlet-manifest-reference' },
-      { title: 'CI plugins Reference', href: '/docs/reference/ci-plugins' },
-      { title: 'Gimlet Configuration Reference', href: '/docs/reference/gimlet-configuration-reference' },
-      { title: 'Onechart Reference', href: '/docs/reference/onechart-reference' },
-    ],
-  },
-  {
-    title: 'Learn More',
-    links: [
-      { title: 'Gimlet Compared to', href: '/docs/learn-more/gimlet-compared-to' },
-      { title: 'FAQ', href: '/docs/learn-more/faq' },
-      { title: 'Contact us', href: '/docs/learn-more/contact-us' },
+      { title: 'Onechart Reference', href: '/onechart-reference' },
     ],
   },
 ]
@@ -175,10 +60,7 @@ export default function App({ Component, pageProps }) {
   let title = pageProps.markdoc?.frontmatter.title
 
   const router = useRouter()
-  let isYamlGeneratorPage = router.pathname === '/k8s-yaml-generator'
-  let isFrontendPage = router.pathname === '/frontend'
-  let isBackendPage = router.pathname === '/backend'
-  let isAIPage = router.pathname === '/ai-deployment'
+  let isYamlGeneratorPage = router.pathname === '/'
 
   let image = "logosocial.png"
   if (pageProps.markdoc?.frontmatter.image_social) {
@@ -216,21 +98,6 @@ export default function App({ Component, pageProps }) {
     ogTitle = "Kubernetes YAML Generator"
     description = "Generate Kubernetes YAML files for web application deployments. Uses a generic Helm chart, because no one can remember the Kubernetes yaml syntax."
     image = "yaml-generator.png"
-  }
-  if (isFrontendPage) {
-    pageTitle = "Frontend";
-    ogTitle = "Host Your Frontend Without Billing Surprises"
-    description = "Host Your Frontend Without Billing Surprises"
-  }
-  if (isBackendPage) {
-    pageTitle = "Backend";
-    ogTitle = "Deploy Containerized Backend Services"
-    description = "Deploy Containerized Backend Services"
-  }
-  if (isAIPage) {
-    pageTitle = "AI";
-    ogTitle = "Introduce Kubernetes to Your AI Project"
-    description = "Introduce Kubernetes to Your AI Project"
   }
 
   useEffect(() => {

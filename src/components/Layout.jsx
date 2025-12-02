@@ -1,98 +1,79 @@
 import { useRouter } from 'next/router'
-import { useState, useEffect } from "react";
+import Link from 'next/link'
 
-import { HomePage } from '@/components/HomePage'
 import { YamlGenerator } from '@/components/YamlGenerator'
 import { Prose } from '@/components/Prose'
-import { BlogPage } from './Blogpage'
-import { Header } from './Header'
-import { DocsPage } from './DocsPage'
-import { AIPage } from './AIPage'
-import { FrontendPage } from './FrontendPage'
-import { BackendPage } from './BackendPage'
+
+function TableOfContents({ tableOfContents }) {
+  return (
+    <nav className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
+      <h2 className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        On this page
+      </h2>
+      <ul className="space-y-2 text-sm">
+        {tableOfContents.map((section) => (
+          <li key={section.id}>
+            <a
+              href={`#${section.id}`}
+              className="block text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+            >
+              {section.title}
+            </a>
+            {section.children.length > 0 && (
+              <ul className="mt-2 ml-4 space-y-2">
+                {section.children.map((child) => (
+                  <li key={child.id}>
+                    <a
+                      href={`#${child.id}`}
+                      className="block text-gray-500 hover:text-gray-700 dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
+                    >
+                      {child.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </li>
+        ))}
+      </ul>
+    </nav>
+  )
+}
 
 export function Layout({ children, title, navigation, tableOfContents, pageProps }) {
   let router = useRouter()
-  let isDocsPage = router.pathname.startsWith('/docs') || router.pathname.startsWith('/concepts')
-  let isBlogPage = router.pathname.startsWith('/blog')
-  let isTOSPage = router.pathname === '/tos'
-  let isYamlGeneratorPage = router.pathname === '/k8s-yaml-generator'
-  let isHomePage = router.pathname === '/'
-  let isFrontendPage = router.pathname === '/frontend'
-  let isBackendPage = router.pathname === '/backend'
-  let isAIPage = router.pathname === '/ai-deployment'
+  let isDocsPage = router.pathname === '/onechart-reference'
+  let isYamlGeneratorPage = router.pathname === '/'
 
   let section = navigation.find((section) =>
     section.links.find((link) => link.href === router.pathname)
   )
 
   let bg = 'bg-white dark:bg-neutral-900'
-  if (isFrontendPage) {
-    bg='bg-teal-100 dark:bg-teal-800'
-  }
-  if (isAIPage) {
-    bg='bg-purple-100 dark:bg-purple-800'
-  }
-  if (isBackendPage) {
-    bg='bg-amber-100 dark:bg-amber-800'
-  }
-  
-  const [cookieConsent, setCookieConsent] = useState();
-
-  useEffect(() => {
-    const value = window.localStorage.getItem("cookieConsent")
-    if (value !== null) {
-      setCookieConsent(value);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (cookieConsent !== undefined) {
-      window.localStorage.setItem("cookieConsent", cookieConsent);
-    }
-  }, [cookieConsent]);
 
   return (
     <div className={bg}>
-      { cookieConsent === undefined &&
-      <div className='fixed bottom-0 left-0 m-8 rounded bg-neutral-300 text-neutral-900 sm:space-x-4 p-2 text-sm z-40'>
-        <span className='block sm:inline'>We use cookies to help us improve gimlet.io</span>
-        <span><a href="/tos" className='underline'>Learn more</a></span>
-        <span
-          className='bg-neutral-900 text-neutral-100 ml-2 sm:ml-0 p-1 px-2 rounded cursor-pointer'
-          onClick={() => setCookieConsent(true)}>
-            OK
-        </span>
-      </div>
-      }
-      {!isYamlGeneratorPage &&
-        <Header navigation={navigation} />
-      }
-
-      {isHomePage && <HomePage />}
       {isYamlGeneratorPage && <YamlGenerator />}
-      {isFrontendPage && <FrontendPage />}
-      {isBackendPage && <BackendPage />}
-      {isAIPage && <AIPage />}
-      {isTOSPage && <Prose className="py-16 mx-auto !max-w-4xl">{children}</Prose>}
 
-      {isBlogPage &&
-        <BlogPage
-          title={title} section={section}
-          pageProps={pageProps} tableOfContents={tableOfContents}
-        >
-          {children}
-        </BlogPage>
-      }
+      {isDocsPage && (
+        <div className="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="flex gap-8">
+            {/* Table of Contents - Left Sidebar */}
+            <aside className="hidden lg:block w-64 flex-shrink-0">
+              {tableOfContents && tableOfContents.length > 0 && (
+                <TableOfContents tableOfContents={tableOfContents} />
+              )}
+            </aside>
 
-      {isDocsPage &&
-        <DocsPage
-          title={title} section={section}
-          navigation={navigation} tableOfContents={tableOfContents}
-        >
-          {children}
-        </DocsPage>
-      }
+            {/* Main Content */}
+            <main className="flex-1 min-w-0">
+              <Prose className="!max-w-none">
+                {children}
+              </Prose>
+            </main>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

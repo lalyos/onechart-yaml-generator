@@ -91,7 +91,8 @@ export function YamlGenerator() {
 
   useEffect(() => {
     const chart = charts.find(chart => chart.current);
-    postWithAxios(`https://yaml-generator.gimlet.io/chart/${chart.name}`, nonDefaultValues).then(data => {
+    const baseUrl = process.env.NEXT_PUBLIC_YAML_GENERATOR_URL || 'https://yaml-generator.gimlet.io';
+    postWithAxios(`${baseUrl}/chart/${chart.name}`, nonDefaultValues).then(data => {
       setKubernetesYaml(data)
     }).catch(err => {
       console.error(`Error: ${err}`);
@@ -119,18 +120,13 @@ helm template my-release onechart/${chart.name} -f values.yaml`
         </span>
       </div>
       <div className="text-center pt-12 sm:pt-16">
-      <Link href={"/?ref="+ref}>
-        <span>
-          <span className="sr-only">Home page</span>
-          <img src="/logo.svg" alt="Gimlet" className='h-10 sm:h-16 inline' />
-        </span>
-      </Link>
+        <img src="/logo.svg" alt="Gimlet" className='h-10 sm:h-16 inline' />
       </div>
       <div className="mx-auto p-2 sm:p-4 lg:p-6">
         <header className="grid sm:grid-cols-3 items-center mt-8 mb-20">
           <div className="text-gray-900 dark:text-slate-50 font-semibold sm:col-start-2">
             <h1 className="sm:text-4xl text-center">Kubernetes YAML Generator</h1>
-            <p className="text-xs text-right">made by <a href={"/?ref="+ref} rel="noreferrer" target="_blank" className="underline">gimlet.io</a></p>
+            <p className="text-xs text-right">originally made by <a href="https://gimlet.io/" rel="noreferrer" target="_blank" className="underline">gimlet.io</a></p>
           </div>
           <div className="col-start-3 justify-self-end mr-10">
             <ThemeSelector className="relative z-10 items-end" />
@@ -238,8 +234,9 @@ helm template my-release onechart/${chart.name} -f values.yaml`
                 )}
               </Highlight>
             </div>
-            <p className='pt-16 text-base text-blue-500'>Are you new to Helm? Check out <a href="/concepts/the-sane-helm-guide?ref=yamlgenerator" className="underline">our SANE Helm guide</a>.</p>
-            <p className='text-base text-blue-500'>Curious about onechart/onechart? See <a href="/docs/reference/onechart-reference?ref=yamlgenerator" className="underline">the reference</a>.</p>
+            <p className='pt-16 text-base text-blue-500'>
+              See the full <a href="/onechart-reference" className="underline">Onechart Reference documentation</a> for all available configuration options.
+            </p>
           </div>
         </div>
       </div>
