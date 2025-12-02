@@ -18,6 +18,7 @@ export function YamlGenerator() {
   const [values, setValues] = useState({})
   const [nonDefaultValues, setNonDefaultValues] = useState({})
   const [kubernetesYaml, setKubernetesYaml] = useState("")
+  const [yamlGeneratorUrl, setYamlGeneratorUrl] = useState("")
 
   const router = useRouter()
   const ref = router.pathname.slice(1).replaceAll("/", "-")
@@ -28,6 +29,17 @@ export function YamlGenerator() {
   ]);
   const selected = 'border-neutral-200 bg-white text-neutral-900 shadow-sm';
   const notSelected = 'border-transparent text-neutral-700';
+
+  // Fetch runtime configuration
+  useEffect(() => {
+    fetch('/api/config')
+      .then(res => res.json())
+      .then(data => setYamlGeneratorUrl(data.yamlGeneratorUrl))
+      .catch(err => {
+        console.error('Failed to load config:', err);
+        setYamlGeneratorUrl('https://yaml-generator-back.onechart.dev'); // fallback
+      });
+  }, []);
 
   useEffect(() => {
    const handleKeyDown = (event) => {
@@ -90,14 +102,15 @@ export function YamlGenerator() {
   }, [nonDefaultValues]);
 
   useEffect(() => {
+    if (!yamlGeneratorUrl) return; // Wait for config to load
+
     const chart = charts.find(chart => chart.current);
-    const baseUrl = process.env.NEXT_PUBLIC_YAML_GENERATOR_URL || 'https://yaml-generator.gimlet.io';
-    postWithAxios(`${baseUrl}/chart/${chart.name}`, nonDefaultValues).then(data => {
+    postWithAxios(`${yamlGeneratorUrl}/chart/${chart.name}`, nonDefaultValues).then(data => {
       setKubernetesYaml(data)
     }).catch(err => {
       console.error(`Error: ${err}`);
     });
-  }, [nonDefaultValues, charts]);
+  }, [nonDefaultValues, charts, yamlGeneratorUrl]);
 
   const chart = charts.find(chart => chart.current);
   const diffBody = `cat << EOF > values.yaml
@@ -156,7 +169,7 @@ helm template my-release onechart/${chart.name} -f values.yaml`
         </div>
         <div className="sm:align-center sm:flex sm:flex-col space-y-2">
           <div className="space-y-4 sm:grid sm:grid-cols-2 sm:gap-2 sm:space-y-0 xl:grid-cols-8">
-            <div className="dark:bg-white border-2 p-4 rounded-md col-span-5">
+            <div className="bg-white border-2 p-4 rounded-md col-span-5">
               <HelmUI
                 key={charts[0].current ? charts[0].name : charts[1].current ? charts[1].name : charts[2].name}
                 schema={charts[0].current ? onechartSchema : charts[1].current ? staticSchema : cronjobSchema}
